@@ -107,8 +107,8 @@ class Player():
 
     def win(self,bet):
         for chip in chips[::-1]:
-                self.chips[chip] += int(bet / chip)
-                amount = amount % chip
+            self.chips[chip] += int(bet / chip)
+            bet %= chip
 
     def __str__(self):
         print("\nPending request, please wait...")
