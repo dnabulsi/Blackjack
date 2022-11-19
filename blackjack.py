@@ -293,12 +293,13 @@ def game(player, bet):
         return main()
     elif dealer_total_value < player_total_value:
         player.win(bet*2)
+        print("You WIN! :)")
         print(f"Chips with the value of ${bet*2} have been deposited in your chip balance.\n")
         sleep(2)
         return main()
     else:
         player.win(bet)
-        print(f"It's a tie! ${bet} has been returned to your chip balance.")
+        print(f"It's a TIE! ${bet} has been returned to your chip balance.")
         sleep(2)
         return main()
 
