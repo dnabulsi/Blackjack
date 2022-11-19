@@ -2,6 +2,8 @@ import random
 from time import sleep
 from os import system
 
+
+
 suits = ('Hearts', 'Diamonds', 'Spades', 'Clubs')
 ranks = ('Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Jack', 'Queen', 'King', 'Ace')
 values = {'Two':2, 'Three':3, 'Four':4, 'Five':5, 'Six':6, 'Seven':7, 'Eight':8, 
@@ -89,32 +91,24 @@ class Player():
     def chips_to_money(self, amount, type):
         print("Pending transaction, please wait...")
         sleep(3)
-        try:
-            self.chips[type] -= int(amount)
-            self.money += int(amount * type)
-            return(f"Success! You have sold {amount} {type}s. You have {self.chips[type]} {type}s remaining. ${amount * type} has been returned to your bank account. You now have ${self.money}.")
-        except:
-            print("Something went wrong with selling chips!")
-            quit()
+        self.chips[type] -= int(amount)
+        self.money += int(amount * type)
+        return(f"Success! You have sold {amount} {type}s. You have {self.chips[type]} {type}s remaining. ${amount * type} has been returned to your bank account. You now have ${self.money}.")
 
     def chips_to_bet(self,bet):
-        try:
-            for chip in chips[::-1]:
-                self.chips[chip] -= int(bet / chip)
-                bet = bet % chip
-                if bet == 0:
-                    break
-            print("Successfully submitted chips.")
-        except:
-            print("Something went wrong with submitting chips for bet!")
+        chips_value = self.func_chips_value()
+        to_be_returned = chips_value - bet
+        for chip in chips[::-1]:
+            self.chips[chip] = int(to_be_returned / chip)
+            to_be_returned %= chip
+            if to_be_returned == 0:
+                break
+        print("Successfully submitted chips.")
 
     def win(self,bet):
-        try:
-            for chip in chips[::-1]:
+        for chip in chips[::-1]:
                 self.chips[chip] += int(bet / chip)
                 amount = amount % chip
-        except:
-            print("Something went wrong with returning the chips!")
 
     def __str__(self):
         print("\nPending request, please wait...")
@@ -134,14 +128,11 @@ def bet_amount(player):
             print(f"You have the following chips:")
             for chip in chips[::-1]:
                 print(f"{player.chips[chip]} {chip}s")
-            response_exit = input("Would you like to exit to buy more chips (Y)? ").upper()
-            if response_exit == 'Y':
-                return main()
             bet = int(input(f"How much do you want to bet? $"))
         except ValueError:
             print("Please enter a valid integer multiple of 5.")
             continue
-        if bet > player.money + player.func_chips_value(self):
+        if bet > player.func_chips_value():
             print("You don't have enough chips! Buy more chips or select a smaller amount.")
             continue
         elif bet == 0:
@@ -228,8 +219,8 @@ def game(player, bet):
                 except:
                     print("Invalid response! Try again.")
             player_total_value += response
-            break
-        player_total_value += player_cards[card].value
+        else:
+            player_total_value += player_cards[card].value
     print(f"The total value of your cards is {player_total_value}! Beginning the dealer's game...")
     sleep(3)
 
@@ -312,8 +303,10 @@ def game(player, bet):
         return main()
 
 def main():
+    
     global player
     if player == '':
+        system('cls||clear')
         print("\nWelcome to Blackjack! The purpose of the game is to bet on getting closer to a sum of 21 than the dealer. Good luck!\n")
 
         # Ask user for input on player's name
